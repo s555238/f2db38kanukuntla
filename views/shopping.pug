@@ -1,11 +1,10 @@
 extends layout
 block content
   h1= title
-  - let results = [{shirtCost:20, pantCost:10, hoodieCost:39},{shirtCost:30, pantCost:40, hoodieCost:50},{shirtCost:27, pantCost:59, hoodieCost:19}]
   div(class="container-fluid mt-3")
   div(class="row")
     each temp,index in results
-        div(class="col-sm-2" )  #{temp.shirtCost} -  #{temp.pantCost} - #{temp.hoodieCost}
+        div(class="col-sm-2" )  #{temp.shopping_type} -  #{temp.size} - #{temp.cost}
   br
   div(class="container-fluid")
     div(class="row")

@@ -1,14 +1,67 @@
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
+var mongoose = require('mongoose')
+var mongodb = require('mongodb')
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var shoppingRouter = require('./routes/shopping');
 var gridbuildRouter = require('./routes/gridbuild');
 var selectorRouter = require('./routes/selector');
+var shoppingRouter = require('./routes/shopping'); 
+var resourceRouter = require('./routes/resource');
+
+require('dotenv').config(); 
+
+const connectionString =process.env.MONGO_CON 
+console.log(connectionString);
+mongoose = require('mongoose');
+mongoose.connect(connectionString,
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  });
+
+  var db = mongoose.connection;
+
+const shopping = require('./models/shopping');
+
+// We can seed the collection if needed on server start
+async function recreateDB() {
+  // Delete everything
+  await shopping.deleteMany();
+  let instance1 = new shopping({
+      shopping_type: "shirt", size: "large",
+      cost: 10
+    });
+  let instance2 = new shopping({
+      shopping_type: "jacket", size: "small",
+      cost: 20
+    });
+  let instance3 = new shopping({
+      shopping_type: "hoodie", size: "extra",
+      cost: 35
+    });
+  instance1.save(function (err, doc) {
+    if (err) return console.error(err);
+    console.log("First shopping saved")
+  });
+  instance2.save(function (err, doc) {
+    if (err) return console.error(err);
+    console.log("Second shopping saved")
+  });
+  instance3.save(function (err, doc) {
+    if (err) return console.error(err);
+    console.log("3rd shopping saved")
+  });
+}
+let reseed = true; 
+if (reseed) { recreateDB();} 
+ 
 
 var app = express();
 
@@ -28,12 +81,22 @@ app.use('/users', usersRouter);
 app.use('/shopping', shoppingRouter);
 app.use('/gridbuild', gridbuildRouter);
 app.use('/selector', selectorRouter);
+app.use('/resource', resourceRouter);
 
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
 });
+
+
+ 
+//Bind connection to error event  
+db.on('error', console.error.bind(console, 'MongoDB connection error:')); 
+db.once("open", function(){ 
+  console.log("Connection to DB succeeded")});
+
+
 
 // error handler
 app.use(function(err, req, res, next) {
@@ -45,5 +108,7 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+
 
 module.exports = app;
