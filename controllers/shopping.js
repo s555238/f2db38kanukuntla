@@ -15,11 +15,17 @@ exports.shopping_list = async function(req, res) {
 
 
  
-// for a specific shopping. 
-exports.shopping_detail = function(req, res) { 
-    res.send('NOT IMPLEMENTED: shopping detail: ' + req.params.id); 
-}; 
- 
+// for a specific Costume. 
+exports.shopping_detail = async function(req, res) { 
+    console.log("detail"  + req.params.id) 
+    try { 
+        result = await shopping.findById( req.params.id) 
+        res.send(result) 
+    } catch (error) { 
+        res.status(500) 
+        res.send(`{"error": document for id ${req.params.id} not found`); 
+    } 
+};  
 // Handle shopping create on POST. 
 exports.shopping_create_post = async function (req, res) {
     console.log(req.body)
@@ -46,8 +52,24 @@ exports.shopping_delete = function(req, res) {
 }; 
  
 // Handle shopping update form on PUT. 
-exports.shopping_update_put = function(req, res) { 
-    res.send('NOT IMPLEMENTED: shopping update PUT' + req.params.id); 
+exports.shopping_update_put = async function(req, res) { 
+    console.log(`update on id ${req.params.id} with body 
+${JSON.stringify(req.body)}`) 
+    try { 
+        let toUpdate = await shopping.findById( req.params.id) 
+        // Do updates of properties 
+        if(req.body.shopping_type)  
+               toUpdate.shopping_type = req.body.shopping_type; 
+        if(req.body.size) toUpdate.size = req.body.size;
+        if(req.body.cost) toUpdate.cost = req.body.cost;  
+        let result = await toUpdate.save(); 
+        console.log("Sucess " + result) 
+        res.send(result) 
+    } catch (err) { 
+        res.status(500) 
+        res.send(`{"error": ${err}: Update for id ${req.params.id} 
+failed`); 
+    } 
 }; 
 
 // VIEWS 
