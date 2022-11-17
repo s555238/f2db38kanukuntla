@@ -1,0 +1,25 @@
+extends layout 
+ 
+block content 
+  h1= title 
+  if (toShow == null) 
+    h2 No instance to show
+  else 
+ 
+    - let shoppingid = toShow._id 
+    - let shopping_type = toShow.shopping_type 
+    - let cost = toShow.cost 
+    - let size = toShow.size 
+    div 
+      div.row 
+        div(class='shoppingAttr mr-3') Shopping ID is: 
+        div #{shoppingid} 
+      div.row 
+        div(class='shoppingAttr mr-3') Shopping Type is: 
+        div #{shopping_type} 
+      div.row 
+        div(class='shoppingAttr mr-3') Shopping Size is: 
+        div #{size} 
+      div.row 
+        div(class='shoppingAttr mr-3') Shopping Cost is: 
+        div #{cost} 

@@ -26,6 +26,18 @@ router.get('/shopping/:id', shopping_controller.shopping_detail);
  
 // GET request for list of all shopping items. 
 router.get('/shopping', shopping_controller.shopping_list); 
+
+//GET detail costume page */ 
+router.get('/detail', shopping_controller.shopping_view_one_Page); 
+
+/* GET create costume page */ 
+router.get('/create', shopping_controller.shopping_create_Page); 
+
+/* GET create update page */ 
+router.get('/update', shopping_controller.shopping_update_Page); 
+
+/* GET delete costume page */ 
+router.get('/delete', shopping_controller.shopping_delete_Page); 
  
 module.exports = router; 
  

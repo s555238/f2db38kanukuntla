@@ -1,0 +1,52 @@
+extends layout 
+ 
+block content 
+  h1= title 
+ 
+  if (toShow == null) 
+    h2 No instance to delete 
+  else 
+    - let shoppingid = toShow._id 
+    - let shopping_type = toShow.shopping_type 
+    - let cost = toShow.cost 
+    - let size = toShow.size 
+    - let actionid = "/resource/shopping/" + shoppingid 
+    script let actionid = "#{actionid}" 
+    div 
+      div.row 
+        div(class='shoppingAttr mr-3') shopping ID is: 
+        div #{shoppingid} 
+      div.row 
+        div(class='shoppingAttr mr-3') shopping Type is: 
+        div #{shopping_type} 
+      div.row 
+        div(class='shoppingAttr mr-3') shopping Size is: 
+        div #{size} 
+      div.row 
+        div(class='shoppingAttr mr-3') shopping Cost is: 
+        div #{cost} 
+ 
+    button(class="btn btn-danger m-2" onclick="deleteOnid()") Delete 
+    button(class="btn btn-secondary m-2" onclick="cancel()") Cancel 
+ 
+  script. 
+    function cancel() { 
+      // Go back to the home page for the shopping collection 
+      window.location.href='/shopping' 
+    } 
+    function deleteOnid() { 
+      console.log("starting delete") 
+      // delete first 
+      fetch(actionid, { 
+        method: 'DELETE'       
+      }).then((resp) => { 
+        return resp.json(); // or resp.text() or whatever the server sends 
+      }).then((body) => { 
+        alert("Delete succeded") 
+        window.location.href='/shopping' 
+        // TODO handle body 
+      }).catch((error) => { 
+        // TODO handle error 
+        alert("Delete failed " + error ) 
+      }); 
+    } 

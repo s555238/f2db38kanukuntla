@@ -1,7 +1,7 @@
 var shopping = require('../models/shopping'); 
  
 
-   // List of all Costumes 
+   // List of all shoppings 
 exports.shopping_list = async function(req, res) { 
     try{ 
         theshopping = await shopping.find(); 
@@ -15,7 +15,7 @@ exports.shopping_list = async function(req, res) {
 
 
  
-// for a specific Costume. 
+// for a specific shopping. 
 exports.shopping_detail = async function(req, res) { 
     console.log("detail"  + req.params.id) 
     try { 
@@ -84,3 +84,74 @@ exports.shopping_view_all_Page = async function(req, res) {
         res.send(`{"error": ${err}}`); 
     }   
 }; 
+
+// Handle shopping delete on DELETE. 
+exports.shopping_delete = async function(req, res) { 
+    console.log("delete "  + req.params.id) 
+    try { 
+        result = await shopping.findByIdAndDelete( req.params.id) 
+        console.log("Removed " + result) 
+        res.send(result) 
+    } catch (err) { 
+        res.status(500) 
+        res.send(`{"error": Error deleting ${err}}`); 
+    } 
+}; 
+
+// Handle a show one view with id specified by query 
+exports.shopping_view_one_Page = async function(req, res) { 
+    console.log("single view for id "  + req.query.id) 
+    try{ 
+        result = await shopping.findById( req.query.id) 
+        res.render('shoppingdetail',  
+{ title: 'Shopping Detail', toShow: result }); 
+    } 
+    catch(err){ 
+        res.status(500) 
+        res.send(`{'error': '${err}'}`); 
+    } 
+}; 
+
+// Handle building the view for creating a shopping. 
+// No body, no in path parameter, no query. 
+// Does not need to be async 
+exports.shopping_create_Page =  function(req, res) { 
+    console.log("create view") 
+    try{ 
+        res.render('shoppingcreate', { title: 'Shopping Create'}); 
+    } 
+    catch(err){ 
+        res.status(500) 
+        res.send(`{'error': '${err}'}`); 
+    } 
+}; 
+
+// Handle building the view for updating a shopping. 
+// query provides the id 
+exports.shopping_update_Page =  async function(req, res) { 
+    console.log("update view for item "+req.query.id) 
+    try{ 
+        let result = await shopping.findById(req.query.id) 
+        res.render('shoppingupdate', { title: 'shopping Update', toShow: result }); 
+    } 
+    catch(err){ 
+        res.status(500) 
+        res.send(`{'error': '${err}'}`); 
+    } 
+}; 
+
+// Handle a delete one view with id from query 
+exports.shopping_delete_Page = async function(req, res) { 
+    console.log("Delete view for id "  + req.query.id) 
+    try{ 
+        result = await shopping.findById(req.query.id) 
+        res.render('shoppingdelete', { title: 'Shopping Delete', toShow: 
+result }); 
+    } 
+    catch(err){ 
+        res.status(500) 
+        res.send(`{'error': '${err}'}`); 
+    } 
+}; 
+ 
+ 
