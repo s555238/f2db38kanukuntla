@@ -4,7 +4,9 @@ block content
   div(class="container-fluid mt-3")
   div(class="row")
     each temp,index in results
+        - let destination = `dispatch(\"/resource/update?id=${temp._id}\")` 
         div(class="col-sm-2" )  #{temp.shopping_type} -  #{temp.size} - #{temp.cost}
+        button.btn( class="btn-primary ml-1", onclick= destination) Update 
   br
   div(class="container-fluid")
     div(class="row")
@@ -15,3 +17,9 @@ block content
     function buy(indexNum) {
       alert(`You purchased item ${indexNum}`);
     }
+  script. 
+    function dispatch(path){ 
+      window.location.href=path 
+    } 
+ 
+  
