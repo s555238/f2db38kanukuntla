@@ -4,6 +4,16 @@ var router = express.Router();
 // Require controller modules. 
 var api_controller = require('../controllers/api'); 
 var shopping_controller = require('../controllers/shopping'); 
+
+// A little function to check if we have an authorized user and continue on 
+// redirect to login. 
+const secured = (req, res, next) => { 
+    if (req.user){ 
+      return next(); 
+    } 
+    req.session.returnTo = req.originalUrl; 
+    res.redirect("/login"); 
+  } 
  
 /// API ROUTE /// 
  
@@ -28,16 +38,16 @@ router.get('/shopping/:id', shopping_controller.shopping_detail);
 router.get('/shopping', shopping_controller.shopping_list); 
 
 //GET detail costume page */ 
-router.get('/detail', shopping_controller.shopping_view_one_Page); 
+router.get('/detail',secured, shopping_controller.shopping_view_one_Page); 
 
 /* GET create costume page */ 
-router.get('/create', shopping_controller.shopping_create_Page); 
+router.get('/create',secured, shopping_controller.shopping_create_Page); 
 
 /* GET create update page */ 
-router.get('/update', shopping_controller.shopping_update_Page); 
+router.get('/update', secured,shopping_controller.shopping_update_Page); 
 
 /* GET delete costume page */ 
-router.get('/delete', shopping_controller.shopping_delete_Page); 
+router.get('/delete',secured, shopping_controller.shopping_delete_Page); 
  
 module.exports = router; 
  
